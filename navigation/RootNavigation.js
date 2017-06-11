@@ -32,9 +32,9 @@ export default class RootNavigation extends React.Component {
         </TabNavigationItem>
 
         <TabNavigationItem
-          id="links"
+          id="board"
           renderIcon={isSelected => this._renderIcon('hand-spock-o', isSelected)}>
-          <StackNavigation initialRoute="links" />
+          <StackNavigation initialRoute="board" />
         </TabNavigationItem>
 
         <TabNavigationItem

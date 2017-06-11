@@ -7,44 +7,61 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   View,
 } from 'react-native';
-import { Components } from 'expo';
 
+import AliveMap from '../components/AliveMap';
 import { MonoText } from '../components/StyledText';
 
+import JourneyList from '../components/JourneyList';
+
 export default class StartScreen extends React.Component {
-  static route = {
-    navigationBar: {
-      visible: false
-    },
-  };
+
+  constructor(props) {
+    super(props);
+    this.onPressButton = this.onPressButton.bind(this);
+    this.onPressJourneyCard = this.onPressJourneyCard.bind(this);
+  }
+
+  onPressButton() {
+    this.props.navigator.push('create');
+  }
+
+  onPressJourneyCard(props) {
+    this.props.navigator.push('discovery', { 
+      name: props.name,
+      creator: props.creator,
+      description: props.description,
+      discoveries: props.discoveries,
+      region: props.region,
+      id: props.id,
+    });
+  }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Components.MapView
-          style={{ flex: 1 }}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={this.props.route.getContentContainerStyle()}
+      >
+        <AliveMap
+          height={400}
         />
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>
-            This is a tab bar. You can edit it in:
-          </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>
-              navigation/RootNavigation.js
-            </MonoText>
-          </View>
+        <View style={{alignItems: 'center'}}>
+          <TouchableHighlight onPress={this.onPressButton}>
+            <Image
+              style={styles.button}
+              source={require('../assets/icons/Create button.png')}
+            />
+          </TouchableHighlight>
         </View>
-      </View>
+        <Text style={styles.title}>   Nearby journeys</Text>
+        <View>
+          
+          <JourneyList onPressJourneyCard={this.onPressJourneyCard}/>
+        </View>
+      </ScrollView>
     );
   }
 
@@ -132,10 +149,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
     ...Platform.select({
       ios: {
         shadowColor: 'black',
@@ -149,7 +163,6 @@ const styles = StyleSheet.create({
     }),
     alignItems: 'center',
     backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
   },
   tabBarInfoText: {
     fontSize: 17,
@@ -169,5 +182,13 @@ const styles = StyleSheet.create({
   helpLinkText: {
     fontSize: 14,
     color: '#F08A38',
+  },
+  button: {
+    height: 40,
+    width: 253,
+    marginTop: -60,
+  },
+  title: {
+    marginVertical: 10,
   },
 });
